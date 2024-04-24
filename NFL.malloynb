@@ -1,0 +1,101 @@
+>>>malloy
+
+source: nfl is duckdb.table('nflstats1.parquet') extend{
+
+}
+>>>malloy
+run: nfl -> {
+    select:*
+}
+>>>malloy
+
+run: nfl -> {
+    group_by: team
+    aggregate: points is avg(points)
+}
+>>>malloy
+# line_chart
+run: nfl -> {
+  group_by: `year`
+  aggregate: pass_yds is sum(pass_yds)
+}
+>>>malloy
+# line_chart
+run: nfl -> {
+  group_by: `year`
+  aggregate: rush_td is sum(rush_td)
+}
+>>>malloy
+run: nfl -> {
+  select:*
+  where: team = 'Seattle Seahawks' and `year` = 2005
+}
+>>>malloy
+
+# scatter_chart
+run: nfl -> {
+    group_by: `year`
+    where: team = 'Seattle Seahawks'
+    aggregate: pass_yds is avg(pass_yds)
+
+}
+>>>malloy
+
+run: nfl -> {
+    group_by: `year`
+    where: team = 'Houston Texans'
+    aggregate: rush_td is avg(rush_td)
+
+}
+>>>malloy
+# bar_chart
+run: nfl -> {
+    group_by: `year`
+    where: team = 'Seattle Seahawks' 
+    aggregate: pass_att is sum(pass_att)
+}
+>>>malloy
+run: nfl -> {
+  group_by: team
+  aggregate: points is sum(points)
+  nest: `year` is {
+    group_by: `year`
+    aggregate: points is sum(points)
+  }
+}
+>>>malloy
+run: nfl -> {
+  group_by: team
+  aggregate: points is sum(points)
+  nest: plays_offense is {
+    group_by: `year`
+    group_by: plays_offense
+    aggregate: points is sum(points)
+  }
+}
+>>>malloy
+run: nfl -> {
+  group_by: team 
+  aggregate: penalties is sum(penalties)
+  nest: penalties_yds is {
+    group_by: penalties_yds
+    group_by: `year`
+  }
+}
+>>>malloy
+run: nfl -> {
+    group_by: team
+    aggregate: losses is sum(losses)
+}
+>>>malloy
+run: nfl -> {
+  group_by: `year`
+  group_by: team
+aggregate: max_losses is max(losses)
+    
+  } 
+>>>malloy
+run: nfl -> {
+  group_by: `year`
+  aggregate: max_lossess is max(losses) 
+  }
